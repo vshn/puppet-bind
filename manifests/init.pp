@@ -55,10 +55,6 @@ class bind (
         keydir => "${confdir}/keys",
     }
 
-    file { "${confdir}/named.conf.local":
-        replace => false,
-    }
-
     concat { [
         "${confdir}/acls.conf",
         "${confdir}/keys.conf",
