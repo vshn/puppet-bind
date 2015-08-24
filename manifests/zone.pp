@@ -35,8 +35,28 @@ define bind::zone (
     if $has_zone_file {
         if $zone_type == 'master' and $source != '' {
             $_source = $source
+            file { "${cachedir}/${name}/${_domain}":
+                ensure  => present,
+                owner   => $bind::params::bind_user,
+                group   => $bind::params::bind_group,
+                mode    => '0644',
+                source  => $_source,
+                audit   => [ content ],
+                require => File["${cachedir}/${name}"],
+                notify  => Service['bind'],
+            }
         } else {
             $_source = 'puppet:///modules/bind/db.empty'
+            file { "${cachedir}/${name}/${_domain}":
+                ensure  => present,
+                owner   => $bind::params::bind_user,
+                group   => $bind::params::bind_group,
+                mode    => '0644',
+                source  => $_source,
+                replace => false,
+                audit   => [ content ],
+                require => File["${cachedir}/${name}"],
+            }
         }
 
         file { "${cachedir}/${name}":
@@ -47,15 +67,6 @@ define bind::zone (
             require => Package['bind'],
         }
 
-        file { "${cachedir}/${name}/${_domain}":
-            ensure  => present,
-            owner   => $bind::params::bind_user,
-            group   => $bind::params::bind_group,
-            mode    => '0644',
-            replace => false,
-            source  => $_source,
-            audit   => [ content ],
-        }
 
         if $dnssec {
             exec { "dnssec-keygen-${name}":
