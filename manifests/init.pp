@@ -61,7 +61,7 @@ class bind (
             ensure => file,
             owner  => 'root',
             group  => $::bind::params::bind_group,
-            mode   => '0400',
+            mode   => '0440',
         }
     }
 
