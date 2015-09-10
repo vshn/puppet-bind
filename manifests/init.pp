@@ -52,6 +52,17 @@ class bind (
         content => template('bind/named.conf.erb'),
     }
 
+    exec { 'generate-bind-rndc.conf':
+        command => "/usr/sbin/rndc-confgen > ${confdir}/rndc.key",
+        creates => "${confdir}/rndc.key",
+    }->
+    file { "${confdir}/rndc.key":
+        ensure => file,
+        owner  => 'root',
+        group  => $::bind::params::bind_group,
+        mode   => '0400',
+    }
+
     class { 'bind::keydir':
         keydir => "${confdir}/keys",
     }
