@@ -2,7 +2,8 @@
 # This file managed by puppet - changes will be lost
 zone "<%= @_domain %>" {
 	type <%= @zone_type %>;
-<%- if @zone_type == 'master' %>    check-spf ignore;<%- end -%>
+<%- if @zone_type == 'master' %>	check-spf ignore;
+<%- end -%>
 <%- if @has_zone_file -%>
 <%-   if @dnssec -%>
 	auto-dnssec maintain;
