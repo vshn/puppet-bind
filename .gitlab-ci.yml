@@ -1,0 +1,35 @@
+stages:
+  - test
+  - deploy
+
+puppet3:
+  stage: test
+  image: docker.io/vshn/puppetci:latest-3
+  script:
+    - test_parser_validate.sh
+    - puppet-check --style .
+
+puppet3_future:
+  stage: test
+  image: docker.io/vshn/puppetci:latest-3
+  variables:
+    STRICT_VARIABLES: 'yes'
+    FUTURE_PARSER: 'yes'
+  script:
+    - test_parser_validate.sh
+    - puppet-check --style --future .
+
+puppet4:
+  stage: test
+  image: docker.io/vshn/puppetci:latest-4
+  script:
+    - test_parser_validate.sh
+    - puppet-check --style .
+
+mco_r10k:
+  stage: deploy
+  image: registry.vshn.net/vshn-docker/mcoclient_vshn:latest
+  script:
+    - mco r10k deploy_module $CI_PROJECT_NAME -I /vshn.net$/
+  tags:
+    - mco
