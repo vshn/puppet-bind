@@ -9,7 +9,7 @@ class bind (
     $rndc          = undef,
     $notify_to_soa = false,
 ) {
-    include params
+    include ::bind::params
 
     $auth_nxdomain = false
 
